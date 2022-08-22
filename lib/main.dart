@@ -4,6 +4,7 @@ import 'package:mymall/bloc/local_product_bloc/local_product_bloc.dart';
 import 'package:mymall/bloc/product_bloc/product_bloc.dart';
 import 'package:mymall/bloc/product_bloc/product_event.dart';
 import 'package:mymall/source/local/product_local_repository_impl.dart';
+import 'package:mymall/source/remote/product_repository_impl.dart';
 import 'package:mymall/view/product_page.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ProductBloc()),
+        BlocProvider(create: (context) => ProductBloc(ProductRepositoryImpl())),
         BlocProvider(create: (context) => LocalProductBloc(ProductLocalRepositoryImpl()))
       ],
       child: MaterialApp(
