@@ -20,20 +20,23 @@ class Product {
   List<ProductData>? data;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    status: json["status"],
-    message: json["message"],
-    totalRecord: json["totalRecord"],
-    totalPage: json["totalPage"],
-    data: List<ProductData>.from(json["data"].map((x) => ProductData.fromJson(x))),
-  );
+        status: json["status"],
+        message: json["message"],
+        totalRecord: json["totalRecord"],
+        totalPage: json["totalPage"],
+        data: List<ProductData>.from(
+            json["data"].map((x) => ProductData.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "totalRecord": totalRecord,
-    "totalPage": totalPage,
-    "data": data != null ? List<dynamic>.from(data!.map((x) => x.toJson())) : null,
-  };
+        "status": status,
+        "message": message,
+        "totalRecord": totalRecord,
+        "totalPage": totalPage,
+        "data": data != null
+            ? List<dynamic>.from(data!.map((x) => x.toJson()))
+            : null,
+      };
 }
 
 class ProductData {
@@ -58,24 +61,24 @@ class ProductData {
   DateTime? createdAt;
 
   factory ProductData.fromJson(Map<String, dynamic> json) => ProductData(
-    id: json["id"],
-    slug: json["slug"],
-    title: json["title"],
-    description: json["description"],
-    price: json["price"],
-    featuredImage: json["featured_image"],
-    status: json["status"],
-    createdAt: DateTime.parse(json["created_at"]),
-  );
+        id: json["id"],
+        slug: json["slug"],
+        title: json["title"],
+        description: json["description"],
+        price: json["price"],
+        featuredImage: json["featured_image"],
+        status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "slug": slug,
-    "title": title,
-    "description": description,
-    "price": price,
-    "featured_image": featuredImage,
-    "status": status,
-    "created_at": createdAt?.toIso8601String(),
-  };
+        "id": id,
+        "slug": slug,
+        "title": title,
+        "description": description,
+        "price": price,
+        "featured_image": featuredImage,
+        "status": status,
+        "created_at": createdAt?.toIso8601String(),
+      };
 }

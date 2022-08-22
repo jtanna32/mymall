@@ -42,11 +42,12 @@ class NoProductInCardState extends LocalProductState {
   NoProductInCardState({this.message});
 }
 
-class DeleteProductSuccessState extends LocalProductState{}
+class DeleteProductSuccessState extends LocalProductState {}
 
-class DeleteProductLoadingState extends LocalProductState{}
+class DeleteProductLoadingState extends LocalProductState {}
 
-class DeleteProductFailureState extends LocalProductState{
+class DeleteProductFailureState extends LocalProductState {
   String? error;
+
   DeleteProductFailureState({this.error});
 }

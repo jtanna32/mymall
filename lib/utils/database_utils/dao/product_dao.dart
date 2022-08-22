@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:mymall/utils/database_utils/database_helper.dart';
+
 import 'package:mymall/model/product.dart';
+import 'package:mymall/utils/database_utils/database_helper.dart';
 
 class ProductDao {
   final dbProvider = DatabaseHelper.dbHelper;
@@ -14,7 +15,8 @@ class ProductDao {
 
   //Get All Product items
   //Searches if query string was passed
-  Future<List<ProductData>> getProduct({List<String>? columns, String? query}) async {
+  Future<List<ProductData>> getProduct(
+      {List<String>? columns, String? query}) async {
     final db = await dbProvider.database;
 
     List<Map<String, dynamic>>? result;
@@ -47,7 +49,8 @@ class ProductDao {
   //Delete Product records
   Future<int> deleteProduct(int id) async {
     final db = await dbProvider.database;
-    var result = await db.delete(productTable, where: 'id = ?', whereArgs: [id]);
+    var result =
+        await db.delete(productTable, where: 'id = ?', whereArgs: [id]);
 
     return result;
   }

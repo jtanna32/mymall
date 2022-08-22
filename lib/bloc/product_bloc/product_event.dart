@@ -10,7 +10,7 @@ class GetProductEvent extends ProductBlocEvent {
   GetProductEvent(this.page);
 }
 
-class ProductInitialEvent extends ProductBlocEvent{}
+class ProductInitialEvent extends ProductBlocEvent {}
 
 class AddLocalProductEvent extends ProductBlocEvent {
   ProductData? productData;
@@ -20,6 +20,7 @@ class AddLocalProductEvent extends ProductBlocEvent {
 
 class GetLocalProductsEvent extends ProductBlocEvent {
   List<ProductData>? products;
+
   GetLocalProductsEvent({this.products});
 
   @override
@@ -28,5 +29,6 @@ class GetLocalProductsEvent extends ProductBlocEvent {
 
 class DeleteLocalProductEvent extends ProductBlocEvent {
   int? id;
+
   DeleteLocalProductEvent({this.id});
 }

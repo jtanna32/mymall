@@ -4,7 +4,6 @@ import 'package:mymall/bloc/product_bloc/product_event.dart';
 import 'package:mymall/bloc/product_bloc/product_state.dart';
 import 'package:mymall/model/product.dart';
 import 'package:mymall/source/remote/product_repository.dart';
-import 'package:mymall/source/remote/product_repository_impl.dart';
 
 class ProductBloc extends Bloc<ProductBlocEvent, ProductBlocState> {
   final ProductRepository repository;

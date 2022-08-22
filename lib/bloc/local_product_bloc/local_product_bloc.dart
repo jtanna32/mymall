@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:mymall/model/product.dart';
 import 'package:mymall/source/local/product_local_repository.dart';
 
 part 'local_product_event.dart';
-
 part 'local_product_state.dart';
 
 class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
@@ -32,7 +30,7 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
     on<GetAllCartProductEvent>((event, emit) async {
       emit(GetAllCartProductLoadingState());
       final products = await localRepository.getAllProducts();
-      if(products.isEmpty) {
+      if (products.isEmpty) {
         emit(NoProductInCardState(message: "No Products available"));
       } else {
         emit(GetAllCartProductSuccessState(products: products));
@@ -42,7 +40,7 @@ class LocalProductBloc extends Bloc<LocalProductEvent, LocalProductState> {
     on<DeleteCartProductEvent>((event, emit) async {
       emit(DeleteProductLoadingState());
       final result = await localRepository.deleteProductById(event.id);
-      if(result != null) {
+      if (result != null) {
         emit(DeleteProductSuccessState());
       } else {
         emit(DeleteProductFailureState(error: "Something went wrong"));

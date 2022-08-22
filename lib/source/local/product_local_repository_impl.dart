@@ -1,6 +1,6 @@
-import 'package:mymall/utils/database_utils/dao/product_dao.dart';
 import 'package:mymall/model/product.dart';
 import 'package:mymall/source/local/product_local_repository.dart';
+import 'package:mymall/utils/database_utils/dao/product_dao.dart';
 
 class ProductLocalRepositoryImpl extends ProductLocalRepository {
   final productDao = ProductDao();

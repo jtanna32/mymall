@@ -6,6 +6,7 @@ abstract class LocalProductEvent {
 
 class AddProductToCartEvent extends LocalProductEvent {
   ProductData? productData;
+
   AddProductToCartEvent({this.productData});
 }
 
@@ -15,6 +16,6 @@ class GetAllCartProductEvent extends LocalProductEvent {}
 
 class DeleteCartProductEvent extends LocalProductEvent {
   final int id;
+
   DeleteCartProductEvent({required this.id});
 }
-
