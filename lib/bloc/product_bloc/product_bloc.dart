@@ -16,10 +16,10 @@ class ProductBloc extends Bloc<ProductBlocEvent, ProductBlocState> {
       emit(ProductLoadingState());
       try {
         product = await repository.getProducts(event.page!);
-        // emit success state if state is loading
+        // emit success state if state is success
         emit(GetProductSuccessState(product: product));
       } on Exception {
-        // emit failure state if state is loading
+        // emit failure state if state is failure
         emit(ProductFailureState(error: "Something went wrong"));
       }
     });
