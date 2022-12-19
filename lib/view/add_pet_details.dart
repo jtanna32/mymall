@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mymall/model/infection.dart';
 import 'package:mymall/utils/calendar_utils.dart';
 
 class AddPetDetails extends StatefulWidget {
@@ -12,6 +13,8 @@ class AddPetDetails extends StatefulWidget {
 }
 
 class _AddPetDetailsState extends State<AddPetDetails> {
+  // Pet Information
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _breedController = TextEditingController();
   final TextEditingController _speciesController = TextEditingController();
@@ -24,6 +27,7 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   final TextEditingController _sterilizationController =
       TextEditingController();
 
+  // Clinic Information
   final TextEditingController _doctorNameController = TextEditingController();
   final TextEditingController _clinicAddressController =
       TextEditingController();
@@ -31,20 +35,32 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   final TextEditingController _clinicContactController =
       TextEditingController();
 
-  final TextEditingController _ownerNameController =
-      TextEditingController();
+  // owner Information
+  final TextEditingController _ownerNameController = TextEditingController();
 
-  final TextEditingController _ownerAddressController =
-      TextEditingController();
+  final TextEditingController _ownerAddressController = TextEditingController();
 
-  final TextEditingController _ownerContactController =
-      TextEditingController();
+  final TextEditingController _ownerContactController = TextEditingController();
 
   final TextEditingController _ownerAltContactController =
       TextEditingController();
 
-  ValueNotifier<bool> _update = ValueNotifier<bool>(false);
-  List<String> _dogImages =[];
+  ValueNotifier<bool> _dogImageUpdate = ValueNotifier<bool>(false);
+  List<String> _dogImages = [];
+
+  ValueNotifier<bool> _birthMarkImageUpdate = ValueNotifier<bool>(false);
+  String _birthMarkImage = "";
+
+  ValueNotifier<bool> _pictureWithOwnerUpdate = ValueNotifier<bool>(false);
+  String _pictureWithOwner = "";
+
+  List<Infection> _treatmentList = [Infection()];
+
+  List<ValueNotifier<bool>> isRecurringUpdateList = [
+    ValueNotifier<bool>(false)
+  ];
+
+  List<TextEditingController> _lastVisitDateController = [TextEditingController()];
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +150,40 @@ class _AddPetDetailsState extends State<AddPetDetails> {
             ),
 
             const Text(
+              "Birthmark Image",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: _getBirthMarkImage(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            const Text(
+              "Picture With Owner",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: _getPictureWithOwner(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            const Text(
               "Owner Information",
               style: TextStyle(
                 color: Colors.black,
@@ -150,7 +200,6 @@ class _AddPetDetailsState extends State<AddPetDetails> {
             const SizedBox(
               height: 10,
             ),
-
 
             const Text(
               "Vaccine Information",
@@ -175,18 +224,21 @@ class _AddPetDetailsState extends State<AddPetDetails> {
 
   TextFormField _appTextField({
     required String labelText,
-    required TextEditingController controller,
+    TextEditingController? controller,
     Widget? suffixIcon,
     bool readOnly = false,
+    bool enabled = true,
     Function()? onTap,
+    Function(dynamic)? onChanged,
   }) {
     return TextFormField(
       controller: controller,
+      enabled: enabled,
       readOnly: readOnly,
       onTap: readOnly ? onTap : null,
+      onChanged: onChanged,
       decoration: InputDecoration(
         fillColor: Colors.grey,
-        focusColor: Colors.grey,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(
@@ -194,6 +246,11 @@ class _AddPetDetailsState extends State<AddPetDetails> {
           ),
         ),
         focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+          ),
+        ),
+        disabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,
           ),
@@ -340,9 +397,49 @@ class _AddPetDetailsState extends State<AddPetDetails> {
 
   Widget _dogImage() {
     return ValueListenableBuilder<bool>(
-      valueListenable: _update,
+      valueListenable: _dogImageUpdate,
       builder: (context, b, __) {
-        return _dogImages.isNotEmpty ? _imageList() : _addButton();
+        return _dogImages.isNotEmpty
+            ? _imageList()
+            : _addButton(onTap: () {
+                _selectMultipleImages();
+              });
+      },
+    );
+  }
+
+  Widget _getBirthMarkImage() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _birthMarkImageUpdate,
+      builder: (context, b, __) {
+        return _birthMarkImage.isNotEmpty
+            ? Card(
+                child: Image.memory(base64Decode(_birthMarkImage)),
+              )
+            : _addButton(onTap: () async {
+                var image = await _selectImage();
+
+                _birthMarkImage = image;
+                _birthMarkImageUpdate.value = true;
+              });
+      },
+    );
+  }
+
+  Widget _getPictureWithOwner() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _pictureWithOwnerUpdate,
+      builder: (context, b, __) {
+        return _pictureWithOwner.isNotEmpty
+            ? Card(
+                child: Image.memory(base64Decode(_pictureWithOwner)),
+              )
+            : _addButton(onTap: () async {
+                var image = await _selectImage();
+
+                _pictureWithOwner = image;
+                _pictureWithOwnerUpdate.value = true;
+              });
       },
     );
   }
@@ -361,10 +458,10 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     );
   }
 
-  Widget _addButton() {
+  Widget _addButton({required Function() onTap}) {
     return InkWell(
       onTap: () {
-        _selectImages();
+        onTap();
       },
       child: Container(
         height: 40,
@@ -381,18 +478,18 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     );
   }
 
-  void _selectImages() async {
+  void _selectMultipleImages() async {
     final ImagePicker imagePicker = ImagePicker();
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages!.isNotEmpty) {
-      for (var element in selectedImages)  {
+      for (var element in selectedImages) {
         List<int> imageBytes = await element.readAsBytes();
         String base64Image = base64Encode(imageBytes);
         _dogImages.add(base64Image);
       }
     }
 
-    _update.value = true;
+    _dogImageUpdate.value = true;
   }
 
   Column _ownerInformation() {
@@ -436,31 +533,158 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         const Text(
           "Treatment Information",
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 15,
           ),
         ),
         const SizedBox(
           height: 10,
         ),
+        ListView.builder(
+            itemCount: _treatmentList.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
 
-        // pet name
-        _appTextField(
-          labelText: "Vaccination Name",
-          controller: _ownerNameController,
+                  const Divider(
+                    height: 1,
+                    color: Colors.black,
+                  ),
+                  SizedBox(height: 20,),
+
+                  // treatment
+                  _appTextField(
+                    labelText: "Treatment",
+                    onChanged: (treatment) {
+                      _treatmentList[index].treatment = treatment;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  // infection
+                  _appTextField(
+                    labelText: "Infection",
+                    onChanged: (infection) {
+                      _treatmentList[index].infection = infection;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  // infection
+                  _appTextField(
+                    labelText: "Last Visit Date",
+                    controller:  _lastVisitDateController[index],
+                    readOnly: true,
+                    suffixIcon: const Icon(
+                      Icons.date_range,
+                      color: Colors.grey,
+                    ),
+                    onTap: () async {
+                      var date = await CalendarUtils.getDate(context);
+                      if (date != null) {
+                        _treatmentList[index].lastVisitDate = date;
+                        _lastVisitDateController[index].text = date;
+                      }
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  ValueListenableBuilder<bool>(
+                    valueListenable: isRecurringUpdateList[index],
+                    builder: (context, isRecurring, __) {
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CheckboxListTile(
+                            title: const Text("Is Recurring"),
+                            value: isRecurring,
+                            onChanged: (newValue) {
+                              isRecurringUpdateList[index].value = newValue!;
+                              _treatmentList[index].isRecurring = isRecurring;
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          ),
+
+                          // recurringDays
+                          _appTextField(
+                            labelText: "RecurringDays",
+                            enabled: isRecurring,
+                            onChanged: (recurringDays) {
+                              _treatmentList[index].recurringDays =
+                                  recurringDays;
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  // doctorDetails
+                  _appTextField(
+                    labelText: "DoctorDetails",
+                    onChanged: (doctorDetails) {
+                      _treatmentList[index].doctorDetails = doctorDetails;
+                    },
+                  ),
+                  const SizedBox(height: 20,),
+
+                ],
+              );
+            }),
+        MaterialButton(
+          color: Colors.blue,
+          minWidth: MediaQuery.of(context).size.width * 0.4,
+          child: const Text(
+            "Add Treatment",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () {
+            _treatmentList.add(Infection());
+            isRecurringUpdateList.add(ValueNotifier<bool>(false));
+            _lastVisitDateController.add(TextEditingController());
+            setState(() {
+
+            });
+          },
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        // pet breed
         const SizedBox(
           height: 10,
         ),
       ],
     );
+  }
+
+  Future<String> _selectImage() async {
+    final ImagePicker imagePicker = ImagePicker();
+    final XFile? selectedImages =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+
+    String base64Image = "";
+    if (selectedImages != null) {
+      List<int> imageBytes = await selectedImages.readAsBytes();
+      base64Image = base64Encode(imageBytes);
+    }
+
+    return base64Image;
   }
 }

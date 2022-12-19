@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mymall/bloc/local_pet_bloc/local_pet_bloc.dart';
+import 'package:mymall/view/add_pet_details.dart';
 import 'package:mymall/view/view_pet_detail_page.dart';
 
 class MyPetPage extends StatefulWidget {
@@ -24,6 +25,10 @@ class _MyPetPageState extends State<MyPetPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AddPetDetails()),);
+      }, child: Icon(Icons.add)),
       appBar: buildAppBar(context),
       body: buildBody(context),
     );
@@ -235,7 +240,7 @@ class _MyPetPageState extends State<MyPetPage> {
                                 bottomLeft: Radius.circular(20),
                                 topLeft: Radius.circular(20)),
                             child: Container(
-                              color: Colors.blue,
+                              color: Colors.grey.withOpacity(0.3),
                               height: 100,
                               width: 100,
                               child: SizedBox.shrink(),
@@ -257,35 +262,13 @@ class _MyPetPageState extends State<MyPetPage> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Breed: Labrador"),
-                                      Text("Species: Labrador"),
-                                    ],
-                                  ),
+                                  Text("Breed: Labrador"),
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("sex: male"),
-                                      Text("weight: 20 kg"),
-                                    ],
-                                  ),
+                                  Text("sex: male"),
                                   SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("birthmark: None"),
-                                      Text("last pregnancy: -"),
-                                    ],
+                                    height: 10,
                                   ),
                                 ],
                               ),
