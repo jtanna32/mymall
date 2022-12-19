@@ -2,14 +2,16 @@ import 'dart:convert';
 
 Infection infectionFromJson(String str) => Infection.fromJson(json.decode(str));
 String infectionToJson(Infection data) => json.encode(data.toJson());
+
 class Infection {
   Infection({
-      this.treatment,
-      this.infection,
-      this.lastVisitDate,
-      this.recurringDays,
-      this.isRecurring,
-      this.doctorDetails,});
+    this.treatment,
+    this.infection,
+    this.lastVisitDate,
+    this.recurringDays,
+    this.isRecurring,
+    this.doctorDetails,
+  });
 
   Infection.fromJson(dynamic json) {
     treatment = json['treatment'];
@@ -36,5 +38,4 @@ class Infection {
     map['doctorDetails'] = doctorDetails;
     return map;
   }
-
 }
