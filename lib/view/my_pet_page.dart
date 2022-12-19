@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mymall/bloc/local_pet_bloc/local_pet_bloc.dart';
 import 'package:mymall/utils/ui_utils.dart';
+import 'package:mymall/view/add_pet_details.dart';
 
 class MyPetPage extends StatefulWidget {
   const MyPetPage({Key? key}) : super(key: key);
@@ -26,6 +27,18 @@ class _MyPetPageState extends State<MyPetPage> {
     return Scaffold(
       appBar: buildAppBar(context),
       body: buildBody(context),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddPetDetails(),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+        ),
+      ),
     );
   }
 
@@ -50,8 +63,7 @@ class _MyPetPageState extends State<MyPetPage> {
           } else if (state is DeletePetFailureState) {
             UiUtils.showSnackbar(context, state.error ?? "");
           } else if (state is GetAllPetSuccessState) {
-            state.pets!
-                .forEach((element) => total = element.price! + total);
+            state.pets!.forEach((element) => total = element.price! + total);
           }
         },
         child: BlocBuilder<LocalPetBloc, LocalPetState>(
@@ -94,14 +106,14 @@ class _MyPetPageState extends State<MyPetPage> {
                                         color: Colors.blue,
                                         height: 100,
                                         width: 100,
-                                        child: state.pets?[index]
-                                                    .featuredImage !=
-                                                null
-                                            ? Image.network(
-                                                state.pets![index]
-                                                    .featuredImage!,
-                                                fit: BoxFit.fill)
-                                            : SizedBox.shrink(),
+                                        child:
+                                            state.pets?[index].featuredImage !=
+                                                    null
+                                                ? Image.network(
+                                                    state.pets![index]
+                                                        .featuredImage!,
+                                                    fit: BoxFit.fill)
+                                                : SizedBox.shrink(),
                                       ),
                                     ),
                                     SizedBox(
@@ -115,8 +127,7 @@ class _MyPetPageState extends State<MyPetPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              state.pets?[index].title ??
-                                                  "",
+                                              state.pets?[index].title ?? "",
                                               style: TextStyle(fontSize: 18),
                                             ),
                                             SizedBox(
