@@ -45,22 +45,25 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   final TextEditingController _ownerAltContactController =
       TextEditingController();
 
-  ValueNotifier<bool> _dogImageUpdate = ValueNotifier<bool>(false);
-  List<String> _dogImages = [];
+  final ValueNotifier<bool> _dogImageUpdate = ValueNotifier<bool>(false);
+  final List<String> _dogImages = [];
 
-  ValueNotifier<bool> _birthMarkImageUpdate = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _birthMarkImageUpdate = ValueNotifier<bool>(false);
   String _birthMarkImage = "";
 
-  ValueNotifier<bool> _pictureWithOwnerUpdate = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _pictureWithOwnerUpdate =
+      ValueNotifier<bool>(false);
   String _pictureWithOwner = "";
 
-  List<Infection> _treatmentList = [Infection()];
+  final List<Infection> _treatmentList = [Infection()];
 
   List<ValueNotifier<bool>> isRecurringUpdateList = [
     ValueNotifier<bool>(false)
   ];
 
-  List<TextEditingController> _lastVisitDateController = [TextEditingController()];
+  final List<TextEditingController> _lastVisitDateController = [
+    TextEditingController()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -399,11 +402,8 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     return ValueListenableBuilder<bool>(
       valueListenable: _dogImageUpdate,
       builder: (context, b, __) {
-        return _dogImages.isNotEmpty
-            ? _imageList()
-            : _addButton(onTap: () {
-                _selectMultipleImages();
-              });
+        print("dogImage,${_dogImages.length}");
+        return _imageList();
       },
     );
   }
@@ -413,7 +413,9 @@ class _AddPetDetailsState extends State<AddPetDetails> {
       valueListenable: _birthMarkImageUpdate,
       builder: (context, b, __) {
         return _birthMarkImage.isNotEmpty
-            ? Card(
+            ? SizedBox(
+                width: 400,
+                height: 300,
                 child: Image.memory(base64Decode(_birthMarkImage)),
               )
             : _addButton(onTap: () async {
@@ -431,7 +433,9 @@ class _AddPetDetailsState extends State<AddPetDetails> {
       valueListenable: _pictureWithOwnerUpdate,
       builder: (context, b, __) {
         return _pictureWithOwner.isNotEmpty
-            ? Card(
+            ? SizedBox(
+                width: 400,
+                height: 300,
                 child: Image.memory(base64Decode(_pictureWithOwner)),
               )
             : _addButton(onTap: () async {
@@ -445,16 +449,29 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   }
 
   Widget _imageList() {
-    return GridView.builder(
-      itemCount: _dogImages.length,
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: /*(orientation == Orientation.portrait) ? 2 :*/ 3),
-      itemBuilder: (BuildContext context, int index) {
-        return Card(
-          child: Image.memory(base64Decode(_dogImages[index])),
-        );
-      },
+    return Column(
+      children: [
+        _addButton(onTap: () {
+          _dogImageUpdate.value = false;
+          _selectMultipleImages();
+        }),
+        _dogImages.isNotEmpty?
+        GridView.builder(
+          itemCount: _dogImages.length,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3),
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              child: Image.memory(
+                base64Decode(_dogImages[index]),
+                fit: BoxFit.contain,
+              ),
+            );
+          },
+        ):const SizedBox.shrink(),
+      ],
     );
   }
 
@@ -481,13 +498,16 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   void _selectMultipleImages() async {
     final ImagePicker imagePicker = ImagePicker();
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if (selectedImages!.isNotEmpty) {
+    print("rekjfhrwf,${selectedImages!.length}");
+    if (selectedImages.isNotEmpty) {
       for (var element in selectedImages) {
         List<int> imageBytes = await element.readAsBytes();
         String base64Image = base64Encode(imageBytes);
         _dogImages.add(base64Image);
       }
     }
+
+    print("llhkllkj,${_dogImages.length}");
 
     _dogImageUpdate.value = true;
   }
@@ -550,12 +570,13 @@ class _AddPetDetailsState extends State<AddPetDetails> {
             itemBuilder: (context, index) {
               return Column(
                 children: [
-
                   const Divider(
                     height: 1,
                     color: Colors.black,
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
 
                   // treatment
                   _appTextField(
@@ -582,7 +603,7 @@ class _AddPetDetailsState extends State<AddPetDetails> {
                   // infection
                   _appTextField(
                     labelText: "Last Visit Date",
-                    controller:  _lastVisitDateController[index],
+                    controller: _lastVisitDateController[index],
                     readOnly: true,
                     suffixIcon: const Icon(
                       Icons.date_range,
@@ -604,7 +625,6 @@ class _AddPetDetailsState extends State<AddPetDetails> {
                   ValueListenableBuilder<bool>(
                     valueListenable: isRecurringUpdateList[index],
                     builder: (context, isRecurring, __) {
-
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -644,28 +664,30 @@ class _AddPetDetailsState extends State<AddPetDetails> {
                       _treatmentList[index].doctorDetails = doctorDetails;
                     },
                   ),
-                  const SizedBox(height: 20,),
-
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
               );
             }),
-        MaterialButton(
-          color: Colors.blue,
-          minWidth: MediaQuery.of(context).size.width * 0.4,
-          child: const Text(
-            "Add Treatment",
-            style: TextStyle(
-              color: Colors.white,
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: MaterialButton(
+            color: Colors.blue,
+            minWidth: MediaQuery.of(context).size.width * 0.4,
+            child: const Text(
+              "Add Treatment",
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
+            onPressed: () {
+              _treatmentList.add(Infection());
+              isRecurringUpdateList.add(ValueNotifier<bool>(false));
+              _lastVisitDateController.add(TextEditingController());
+              setState(() {});
+            },
           ),
-          onPressed: () {
-            _treatmentList.add(Infection());
-            isRecurringUpdateList.add(ValueNotifier<bool>(false));
-            _lastVisitDateController.add(TextEditingController());
-            setState(() {
-
-            });
-          },
         ),
         const SizedBox(
           height: 10,
