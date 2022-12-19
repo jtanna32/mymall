@@ -1,18 +1,17 @@
-import 'package:mymall/model/pet.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:mymall/model/pet_model.dart';
 import 'package:mymall/source/local/pet_local_repository.dart';
-import 'package:mymall/utils/database_utils/dao/pet_dao.dart';
+import 'package:mymall/utils/database_utils/hive_data_store.dart';
 
 class PetLocalRepositoryImpl extends PetLocalRepository {
-  final petDao = PetDao();
+  final petDao = HiveDataStore();
 
-  Future<List<PetData>> getAllPets() => petDao.getPet();
+  Box<PetModel> getAllPets() {
+    var data = HiveDataStore.box.listenable().value;
 
-  Future<int> createPet(PetData data) => petDao.createPet(data);
+    return data;
+  }
 
-  Future updatePet(PetData data) => petDao.updatePet(data);
-
-  Future<int> deletePetById(int id) => petDao.deletePet(id);
-
-  //We are not going to use this in the demo
-  Future<int> deleteAllPet() => petDao.deleteAllPet();
+  Future<int> createPet(PetModel data) =>
+      HiveDataStore().addUser(petModel: data);
 }

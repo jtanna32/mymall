@@ -26,7 +26,7 @@ class PetAlreadyAddedState extends LocalPetState {
 }
 
 class GetAllPetSuccessState extends LocalPetState {
-  List<PetData>? pets;
+  Box<PetModel>? pets;
 
   GetAllPetSuccessState({this.pets});
 
@@ -40,14 +40,5 @@ class NoPetState extends LocalPetState {
   String? message;
 
   NoPetState({this.message});
-}
 
-class DeletePetSuccessState extends LocalPetState {}
-
-class DeletePetLoadingState extends LocalPetState {}
-
-class DeletePetFailureState extends LocalPetState {
-  String? error;
-
-  DeletePetFailureState({this.error});
 }

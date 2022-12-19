@@ -5,7 +5,7 @@ abstract class LocalPetEvent {
 }
 
 class AddPetToCartEvent extends LocalPetEvent {
-  PetData? petData;
+  PetModel? petData;
 
   AddPetToCartEvent({this.petData});
 }

@@ -1,13 +1,9 @@
+import 'package:hive/hive.dart';
 import 'package:mymall/model/pet.dart';
+import 'package:mymall/model/pet_model.dart';
 
 abstract class PetLocalRepository {
-  Future<List<PetData>> getAllPets();
+  Box<PetModel> getAllPets();
 
-  Future createPet(PetData data);
-
-  Future updatePet(PetData data);
-
-  Future<int> deletePetById(int id);
-
-  Future<int> deleteAllPet();
+  Future createPet(PetModel data);
 }

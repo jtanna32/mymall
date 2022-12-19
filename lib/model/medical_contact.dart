@@ -1,8 +1,14 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+part 'medical_contact.g.dart';
+
 MedicalContact medicalContactFromJson(String str) => MedicalContact.fromJson(json.decode(str));
 String medicalContactToJson(MedicalContact data) => json.encode(data.toJson());
-class MedicalContact {
+
+@HiveType(typeId: 1)
+class MedicalContact extends HiveObject{
   MedicalContact({
       this.doctorName, 
       this.clinicAddress, 
@@ -15,9 +21,17 @@ class MedicalContact {
     clinicHours = json['clinicHours'];
     clinicContact = json['clinicContact'];
   }
+
+@HiveField(0)
   String? doctorName;
+
+  @HiveField(1)
   String? clinicAddress;
+
+  @HiveField(2)
   String? clinicHours;
+
+  @HiveField(3)
   String? clinicContact;
 
   Map<String, dynamic> toJson() {

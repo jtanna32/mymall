@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+part 'infection.g.dart';
+
 Infection infectionFromJson(String str) => Infection.fromJson(json.decode(str));
 String infectionToJson(Infection data) => json.encode(data.toJson());
 
-class Infection {
+@HiveType(typeId: 2)
+class Infection extends HiveObject{
   Infection({
     this.treatment,
     this.infection,
@@ -21,11 +26,18 @@ class Infection {
     isRecurring = json['isRecurring'];
     doctorDetails = json['doctorDetails'];
   }
+
+  @HiveField(0)
   String? treatment;
+  @HiveField(1)
   String? infection;
+  @HiveField(2)
   String? lastVisitDate;
+  @HiveField(3)
   String? recurringDays;
+  @HiveField(4)
   bool? isRecurring;
+  @HiveField(5)
   String? doctorDetails;
 
   Map<String, dynamic> toJson() {

@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:mymall/bloc/local_pet_bloc/local_pet_bloc.dart';
+import 'package:mymall/utils/database_utils/hive_data_store.dart';
 import 'package:mymall/utils/ui_utils.dart';
 import 'package:mymall/view/add_pet_details.dart';
 
@@ -19,6 +21,7 @@ class _MyPetPageState extends State<MyPetPage> {
   @override
   void initState() {
     super.initState();
+
     context.read<LocalPetBloc>().add(GetAllPetEvent());
   }
 
@@ -28,7 +31,9 @@ class _MyPetPageState extends State<MyPetPage> {
       appBar: buildAppBar(context),
       body: buildBody(context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          var value = HiveDataStore.box;
+          print(value.listenable().value);
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AddPetDetails(),
@@ -58,18 +63,13 @@ class _MyPetPageState extends State<MyPetPage> {
       padding: EdgeInsets.only(top: 20),
       child: BlocListener<LocalPetBloc, LocalPetState>(
         listener: (context, state) {
-          if (state is DeletePetSuccessState) {
-            context.read<LocalPetBloc>().add(GetAllPetEvent());
-          } else if (state is DeletePetFailureState) {
-            UiUtils.showSnackbar(context, state.error ?? "");
-          } else if (state is GetAllPetSuccessState) {
-            state.pets!.forEach((element) => total = element.price! + total);
+          if (state is GetAllPetSuccessState) {
+            UiUtils.showSnackbar(context, "Pet Added Successfully");
           }
         },
         child: BlocBuilder<LocalPetBloc, LocalPetState>(
           builder: (context, state) {
-            if (state is GetAllPetLoadingState ||
-                state is DeletePetLoadingState) {
+            if (state is GetAllPetLoadingState) {
               return Center(
                 child: CircularProgressIndicator(),
               );

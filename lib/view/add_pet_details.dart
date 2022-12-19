@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mymall/model/infection.dart';
+import 'package:mymall/model/medical_contact.dart';
+import 'package:mymall/model/pet_model.dart';
 import 'package:mymall/utils/calendar_utils.dart';
+import 'package:mymall/utils/database_utils/hive_data_store.dart';
 
 class AddPetDetails extends StatefulWidget {
   const AddPetDetails({Key? key}) : super(key: key);
@@ -64,6 +67,8 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   final List<TextEditingController> _lastVisitDateController = [
     TextEditingController()
   ];
+
+  final HiveDataStore dataStore = HiveDataStore();
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +224,8 @@ class _AddPetDetailsState extends State<AddPetDetails> {
             const SizedBox(
               height: 10,
             ),
+
+_saveButton()
           ],
         ),
       ),
@@ -402,7 +409,6 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     return ValueListenableBuilder<bool>(
       valueListenable: _dogImageUpdate,
       builder: (context, b, __) {
-        print("dogImage,${_dogImages.length}");
         return _imageList();
       },
     );
@@ -455,22 +461,23 @@ class _AddPetDetailsState extends State<AddPetDetails> {
           _dogImageUpdate.value = false;
           _selectMultipleImages();
         }),
-        _dogImages.isNotEmpty?
-        GridView.builder(
-          itemCount: _dogImages.length,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3),
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: Image.memory(
-                base64Decode(_dogImages[index]),
-                fit: BoxFit.contain,
-              ),
-            );
-          },
-        ):const SizedBox.shrink(),
+        _dogImages.isNotEmpty
+            ? GridView.builder(
+                itemCount: _dogImages.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Image.memory(
+                      base64Decode(_dogImages[index]),
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                },
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -498,16 +505,13 @@ class _AddPetDetailsState extends State<AddPetDetails> {
   void _selectMultipleImages() async {
     final ImagePicker imagePicker = ImagePicker();
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    print("rekjfhrwf,${selectedImages!.length}");
-    if (selectedImages.isNotEmpty) {
+    if (selectedImages!.isNotEmpty) {
       for (var element in selectedImages) {
         List<int> imageBytes = await element.readAsBytes();
         String base64Image = base64Encode(imageBytes);
         _dogImages.add(base64Image);
       }
     }
-
-    print("llhkllkj,${_dogImages.length}");
 
     _dogImageUpdate.value = true;
   }
@@ -708,5 +712,24 @@ class _AddPetDetailsState extends State<AddPetDetails> {
     }
 
     return base64Image;
+  }
+
+  Widget _saveButton() {
+    return  SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: MaterialButton(
+        color: Colors.blue,
+        minWidth: MediaQuery.of(context).size.width * 0.4,
+        child: const Text(
+          "Save Details",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        onPressed: () {
+          dataStore.addUser(petModel: PetModel(uid: "1",name: "Jitarth",medicalContact: MedicalContact(doctorName: "Rutvij",clinicAddress: "ahmedabad",clinicContact: "33434443434"),dogImages:["dqwdqwdqwd","qwdqdqwdqwdqwd"]));
+        },
+      ),
+    );
   }
 }

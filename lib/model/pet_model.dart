@@ -1,10 +1,16 @@
+import 'package:hive/hive.dart';
+
 import 'medical_contact.dart';
 import 'infection.dart';
 import 'dart:convert';
 
+part 'pet_model.g.dart';
+
 PetModel petModelFromJson(String str) => PetModel.fromJson(json.decode(str));
 String petModelToJson(PetModel data) => json.encode(data.toJson());
-class PetModel {
+
+@HiveType(typeId: 0)
+class PetModel extends HiveObject{
   PetModel({
       this.uid, 
       this.name, 
@@ -67,29 +73,54 @@ class PetModel {
       });
     }
   }
+
+  @HiveField(0)
   String? uid;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? breed;
+  @HiveField(3)
   String? species;
+  @HiveField(4)
   String? sex;
+  @HiveField(5)
   String? weight;
+  @HiveField(6)
   String? dob;
+  @HiveField(7)
   String? birthmark;
+  @HiveField(8)
   String? nature;
+  @HiveField(9)
   String? lastPregnancy;
+  @HiveField(10)
   String? sterilization;
+  @HiveField(11)
   MedicalContact? medicalContact;
+  @HiveField(12)
   List<String>? dogImages;
+  @HiveField(13)
   String? birthmarkImage;
+  @HiveField(14)
   String? pictureWithOwner;
+  @HiveField(15)
   String? ownerUid;
+  @HiveField(16)
   String? ownerName;
+  @HiveField(17)
   String? ownerAddress;
+  @HiveField(18)
   String? ownerContact;
+  @HiveField(19)
   String? ownerAltContact;
+  @HiveField(20)
   String? latitude;
+  @HiveField(21)
   String? longitude;
+  @HiveField(22)
   List<Infection>? treatment;
+  @HiveField(23)
   List<Infection>? allergies;
 
   Map<String, dynamic> toJson() {
