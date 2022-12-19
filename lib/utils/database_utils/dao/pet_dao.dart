@@ -1,64 +1,64 @@
 import 'dart:async';
 
-import 'package:mymall/model/product.dart';
+import 'package:mymall/model/pet.dart';
 import 'package:mymall/utils/database_utils/database_helper.dart';
 
-class ProductDao {
+class PetDao {
   final dbProvider = DatabaseHelper.dbHelper;
 
-  //Adds new Product records
-  Future<int> createProduct(ProductData data) async {
+  //Adds new pet records
+  Future<int> createPet(PetData data) async {
     final db = await dbProvider.database;
-    var result = db.insert(productTable, data.toJson());
+    var result = db.insert(petTable, data.toJson());
     return result;
   }
 
-  //Get All Product items
+  //Get All pet items
   //Searches if query string was passed
-  Future<List<ProductData>> getProduct(
+  Future<List<PetData>> getPet(
       {List<String>? columns, String? query}) async {
     final db = await dbProvider.database;
 
     List<Map<String, dynamic>>? result;
     if (query != null) {
       if (query.isNotEmpty)
-        result = await db.query(productTable,
+        result = await db.query(petTable,
             columns: columns,
             where: 'description LIKE ?',
             whereArgs: ["%$query%"]);
     } else {
-      result = await db.query(productTable, columns: columns);
+      result = await db.query(petTable, columns: columns);
     }
 
-    List<ProductData> products = result!.isNotEmpty
-        ? result.map((item) => ProductData.fromJson(item)).toList()
+    List<PetData> pets = result!.isNotEmpty
+        ? result.map((item) => PetData.fromJson(item)).toList()
         : [];
-    return products;
+    return pets;
   }
 
-  //Update Product record
-  Future<int> updateProduct(ProductData data) async {
+  //Update pet record
+  Future<int> updatePet(PetData data) async {
     final db = await dbProvider.database;
 
-    var result = await db.update(productTable, data.toJson(),
+    var result = await db.update(petTable, data.toJson(),
         where: "id = ?", whereArgs: [data.id]);
 
     return result;
   }
 
-  //Delete Product records
-  Future<int> deleteProduct(int id) async {
+  //Delete pet records
+  Future<int> deletePet(int id) async {
     final db = await dbProvider.database;
     var result =
-        await db.delete(productTable, where: 'id = ?', whereArgs: [id]);
+        await db.delete(petTable, where: 'id = ?', whereArgs: [id]);
 
     return result;
   }
 
-  Future<int> deleteAllProduct() async {
+  Future<int> deleteAllPet() async {
     final db = await dbProvider.database;
     var result = await db.delete(
-      productTable,
+      petTable,
     );
 
     return result;

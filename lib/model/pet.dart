@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-Product productFromJson(String str) => Product.fromJson(json.decode(str));
+Pet petFromJson(String str) => Pet.fromJson(json.decode(str));
 
-String productToJson(Product data) => json.encode(data.toJson());
+String petToJson(Pet data) => json.encode(data.toJson());
 
-class Product {
-  Product({
+class Pet {
+  Pet({
     this.status,
     this.message,
     this.totalRecord,
@@ -17,15 +17,15 @@ class Product {
   String? message;
   int? totalRecord;
   int? totalPage;
-  List<ProductData>? data;
+  List<PetData>? data;
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory Pet.fromJson(Map<String, dynamic> json) => Pet(
         status: json["status"],
         message: json["message"],
         totalRecord: json["totalRecord"],
         totalPage: json["totalPage"],
-        data: List<ProductData>.from(
-            json["data"].map((x) => ProductData.fromJson(x))),
+        data: List<PetData>.from(
+            json["data"].map((x) => PetData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,8 +39,8 @@ class Product {
       };
 }
 
-class ProductData {
-  ProductData({
+class PetData {
+  PetData({
     this.id,
     this.slug,
     this.title,
@@ -60,7 +60,7 @@ class ProductData {
   String? status;
   DateTime? createdAt;
 
-  factory ProductData.fromJson(Map<String, dynamic> json) => ProductData(
+  factory PetData.fromJson(Map<String, dynamic> json) => PetData(
         id: json["id"],
         slug: json["slug"],
         title: json["title"],

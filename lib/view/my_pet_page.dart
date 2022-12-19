@@ -2,23 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mymall/bloc/local_product_bloc/local_product_bloc.dart';
+import 'package:mymall/bloc/local_pet_bloc/local_pet_bloc.dart';
 import 'package:mymall/utils/ui_utils.dart';
 
-class MyCartPage extends StatefulWidget {
-  const MyCartPage({Key? key}) : super(key: key);
+class MyPetPage extends StatefulWidget {
+  const MyPetPage({Key? key}) : super(key: key);
 
   @override
-  _MyCartPageState createState() => _MyCartPageState();
+  _MyPetPageState createState() => _MyPetPageState();
 }
 
-class _MyCartPageState extends State<MyCartPage> {
+class _MyPetPageState extends State<MyPetPage> {
   int total = 0;
 
   @override
   void initState() {
     super.initState();
-    context.read<LocalProductBloc>().add(GetAllCartProductEvent());
+    context.read<LocalPetBloc>().add(GetAllPetEvent());
   }
 
   @override
@@ -43,36 +43,36 @@ class _MyCartPageState extends State<MyCartPage> {
   Widget buildBody(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 20),
-      child: BlocListener<LocalProductBloc, LocalProductState>(
+      child: BlocListener<LocalPetBloc, LocalPetState>(
         listener: (context, state) {
-          if (state is DeleteProductSuccessState) {
-            context.read<LocalProductBloc>().add(GetAllCartProductEvent());
-          } else if (state is DeleteProductFailureState) {
+          if (state is DeletePetSuccessState) {
+            context.read<LocalPetBloc>().add(GetAllPetEvent());
+          } else if (state is DeletePetFailureState) {
             UiUtils.showSnackbar(context, state.error ?? "");
-          } else if (state is GetAllCartProductSuccessState) {
-            state.products!
+          } else if (state is GetAllPetSuccessState) {
+            state.pets!
                 .forEach((element) => total = element.price! + total);
           }
         },
-        child: BlocBuilder<LocalProductBloc, LocalProductState>(
+        child: BlocBuilder<LocalPetBloc, LocalPetState>(
           builder: (context, state) {
-            if (state is GetAllCartProductLoadingState ||
-                state is DeleteProductLoadingState) {
+            if (state is GetAllPetLoadingState ||
+                state is DeletePetLoadingState) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is NoProductInCardState) {
+            } else if (state is NoPetState) {
               return Center(
-                child: Text("No Product in cart"),
+                child: Text("No pet available"),
               );
-            } else if (state is GetAllCartProductSuccessState) {
+            } else if (state is GetAllPetSuccessState) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: ListView.builder(
-                      itemCount: state.products?.length,
+                      itemCount: state.pets?.length,
                       cacheExtent: 1 / 2,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
@@ -94,11 +94,11 @@ class _MyCartPageState extends State<MyCartPage> {
                                         color: Colors.blue,
                                         height: 100,
                                         width: 100,
-                                        child: state.products?[index]
+                                        child: state.pets?[index]
                                                     .featuredImage !=
                                                 null
                                             ? Image.network(
-                                                state.products![index]
+                                                state.pets![index]
                                                     .featuredImage!,
                                                 fit: BoxFit.fill)
                                             : SizedBox.shrink(),
@@ -115,7 +115,7 @@ class _MyCartPageState extends State<MyCartPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              state.products?[index].title ??
+                                              state.pets?[index].title ??
                                                   "",
                                               style: TextStyle(fontSize: 18),
                                             ),
@@ -129,7 +129,7 @@ class _MyCartPageState extends State<MyCartPage> {
                                               children: [
                                                 Text("Price"),
                                                 Text(
-                                                    "\$${state.products?[index].price}")
+                                                    "\$${state.pets?[index].price}")
                                               ],
                                             ),
                                             SizedBox(
@@ -148,9 +148,9 @@ class _MyCartPageState extends State<MyCartPage> {
                                   child: InkWell(
                                     onTap: () {
                                       total = 0;
-                                      context.read<LocalProductBloc>().add(
-                                          DeleteCartProductEvent(
-                                              id: state.products![index].id!));
+                                      context.read<LocalPetBloc>().add(
+                                          DeletePetEvent(
+                                              id: state.pets![index].id!));
                                     },
                                     child: Container(
                                       height: 30,
@@ -183,7 +183,7 @@ class _MyCartPageState extends State<MyCartPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Total items: ${state.products!.length}",
+                          "Total items: ${state.pets!.length}",
                           style: TextStyle(color: Colors.white),
                         ),
                         Spacer(),

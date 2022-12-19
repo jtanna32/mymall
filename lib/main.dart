@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mymall/bloc/local_product_bloc/local_product_bloc.dart';
-import 'package:mymall/bloc/product_bloc/product_bloc.dart';
-import 'package:mymall/source/local/product_local_repository_impl.dart';
-import 'package:mymall/source/remote/product_repository_impl.dart';
-import 'package:mymall/view/product_page.dart';
+import 'package:mymall/bloc/local_pet_bloc/local_pet_bloc.dart';
+import 'package:mymall/source/local/pet_local_repository_impl.dart';
+import 'package:mymall/view/my_pet_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,9 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ProductBloc(ProductRepositoryImpl())),
         BlocProvider(
-            create: (context) => LocalProductBloc(ProductLocalRepositoryImpl()))
+            create: (context) => LocalPetBloc(PetLocalRepositoryImpl()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -28,7 +25,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: PrdouctPage(),
+        home: MyPetPage(),
       ),
     );
   }
