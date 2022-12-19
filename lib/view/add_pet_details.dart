@@ -150,6 +150,23 @@ class _AddPetDetailsState extends State<AddPetDetails> {
             const SizedBox(
               height: 10,
             ),
+
+
+            const Text(
+              "Vaccine Information",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            _vaccineInformation(),
+
+            const SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
@@ -408,6 +425,38 @@ class _AddPetDetailsState extends State<AddPetDetails> {
           labelText: "Owner AltContact",
           controller: _ownerAltContactController,
         ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  Column _vaccineInformation() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        const Text(
+          "Treatment Information",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+
+        // pet name
+        _appTextField(
+          labelText: "Vaccination Name",
+          controller: _ownerNameController,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        // pet breed
         const SizedBox(
           height: 10,
         ),
