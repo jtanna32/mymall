@@ -14,8 +14,3 @@ class GetToInitialEvent extends LocalPetEvent {}
 
 class GetAllPetEvent extends LocalPetEvent {}
 
-class DeletePetEvent extends LocalPetEvent {
-  final int id;
-
-  DeletePetEvent({required this.id});
-}

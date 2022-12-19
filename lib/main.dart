@@ -19,7 +19,6 @@ void main() async{
   Directory documentsDirectory = await getApplicationDocumentsDirectory();
   String path = documentsDirectory.path;
 
-  print("path=>.${path}");
   Hive
     ..init(path)
     ..registerAdapter<PetModel>(PetModelAdapter())

@@ -6,10 +6,10 @@ import 'package:mymall/utils/database_utils/hive_data_store.dart';
 class PetLocalRepositoryImpl extends PetLocalRepository {
   final petDao = HiveDataStore();
 
-  Box<PetModel> getAllPets() {
-    var data = HiveDataStore.box.listenable().value;
+  Future<Box<PetModel>> getAllPets() async {
+    final box = await Hive.openBox<PetModel>('petBox');
 
-    return data;
+    return box;
   }
 
   Future<int> createPet(PetModel data) =>

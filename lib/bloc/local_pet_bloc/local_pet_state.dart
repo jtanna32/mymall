@@ -19,12 +19,6 @@ class AddPetFailureState extends LocalPetState {
   AddPetFailureState({this.error});
 }
 
-class PetAlreadyAddedState extends LocalPetState {
-  String? message;
-
-  PetAlreadyAddedState({this.message});
-}
-
 class GetAllPetSuccessState extends LocalPetState {
   Box<PetModel>? pets;
 

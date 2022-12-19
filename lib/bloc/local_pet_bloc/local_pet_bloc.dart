@@ -19,6 +19,7 @@ class LocalPetBloc extends Bloc<LocalPetEvent, LocalPetState> {
     on<GetAllPetEvent>((event, emit) async {
       emit(GetAllPetLoadingState());
       final pets = await localRepository.getAllPets();
+      print(pets.length);
       if (pets.isEmpty) {
         emit(NoPetState(message: "No Pets available"));
       } else {
